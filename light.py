@@ -20,9 +20,9 @@ from homeassistant.components.light import (
     SUPPORT_COLOR,
     SUPPORT_EFFECT,
     SUPPORT_WHITE_VALUE,
-    Light,
+    LightEntity,
     PLATFORM_SCHEMA,
-	ENTITY_ID_FORMAT,
+    ENTITY_ID_FORMAT,
 )
 from homeassistant.const import (
     CONF_FRIENDLY_NAME
@@ -75,7 +75,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     add_entities(lights)
     return True
 
-class MagicHomeLight(Light):
+class MagicHomeLight(LightEntity):
     """Representation of a MagicHomeLight."""
 
     def __init__(self, ip, dev_type):
@@ -277,6 +277,7 @@ class MagicHomeApi:
             return -1
         self.send_bytes(0x71, 0x23, 0x0F, 0xA3) if self.device_type != 4 else self.send_bytes(0xCC, 0x23, 0x33)
         self.s.close()
+        time.sleep(0.5)
         return 0
 
     def turn_off(self):
@@ -285,6 +286,7 @@ class MagicHomeApi:
             return -1
         self.send_bytes(0x71, 0x24, 0x0F, 0xA4) if self.device_type != 4 else self.send_bytes(0xCC, 0x24, 0x33)
         self.s.close()
+        time.sleep(0.5)
         return 0
 
     def get_status(self):
