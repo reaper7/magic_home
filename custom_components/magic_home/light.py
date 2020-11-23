@@ -108,7 +108,8 @@ class MagicHomeLight(LightEntity):
                 if self._dev_type == 5:
                     self._effect = str(stat[3] * 256 + stat[4] - 99)
                 else:
-                    self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
+#                    self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
+                    self._effect = "0"
         else:
             self._hs = None
             self._ison = False
@@ -236,7 +237,8 @@ class MagicHomeLight(LightEntity):
                 if self._dev_type == 5:
                     self._effect = str(stat[3] * 256 + stat[4] - 99)
                 else:
-                    self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
+#                    self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
+                    self._effect = "0"
 
     def check_recv(self,head,type):
         """check recv_packet from the device."""
@@ -264,7 +266,7 @@ class MagicHomeApi:
     """Representation of a MagicHome device."""
 
     def __init__(self, device_ip, device_type):
-        """"Initialize a device."""
+        """Initialize a device."""
         self.device_ip = device_ip
         self.device_type = device_type
         self.API_PORT = 5577
@@ -382,6 +384,9 @@ class MagicHomeApi:
 
     def check_number_range(self, number):
         """Check if the given number is in the allowed range."""
+        if number is None:
+            return 0
+
         if number < 0:
             return 0
         elif number > 255:
