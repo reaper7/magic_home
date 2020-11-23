@@ -86,35 +86,39 @@ class MagicHomeLight(LightEntity):
         self.entity_id = ENTITY_ID_FORMAT.format(("magichome_" + ip.replace(".","_")).lower())
         self._ecount = 0
         stat = self.ctrl.get_status()
-        if self.check_recv(stat[0],stat[1]):
-            self._state = stat
-            rgb = (self._state[6],self._state[7],self._state[8])
-            _LOGGER.info("magic_home_rgb: %s",str(rgb))
-            max_color = max(rgb)
-            self._brightness = max_color
-            hs_rgb = rgb
-            if max_color != 0:
-                hs_rgb = (rgb[0] * 255 / max_color,rgb[1] * 255 / max_color,rgb[2] * 255 / max_color)
-            self._hs = color_util.color_RGB_to_hs(*hs_rgb)
-            self._available = True
-            self._white_value = stat[5] * 255 / 100
-            if stat[2] == 0x23:
-                self._ison = True
-            else:
-                self._ison = False
-            if stat[3] == 0 and stat[4] == 0x61:
-                self._effect = "0"
-            else:
-                if self._dev_type == 5:
-                    self._effect = str(stat[3] * 256 + stat[4] - 99)
-                else:
-#                    self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
-                    self._effect = "0"
+        _LOGGER.info("magic_home stat: %s" % (stat))
+        if stat == -1:
+            self._available = False
         else:
-            self._hs = None
-            self._ison = False
-            self._effect = None
-            self._brightness = None
+            if self.check_recv(stat[0],stat[1]):
+                self._state = stat
+                rgb = (self._state[6],self._state[7],self._state[8])
+                _LOGGER.info("magic_home_rgb: %s",str(rgb))
+                max_color = max(rgb)
+                self._brightness = max_color
+                hs_rgb = rgb
+                if max_color != 0:
+                    hs_rgb = (rgb[0] * 255 / max_color,rgb[1] * 255 / max_color,rgb[2] * 255 / max_color)
+                self._hs = color_util.color_RGB_to_hs(*hs_rgb)
+                self._available = True
+                self._white_value = stat[5] * 255 / 100
+                if stat[2] == 0x23:
+                    self._ison = True
+                else:
+                    self._ison = False
+                if stat[3] == 0 and stat[4] == 0x61:
+                    self._effect = "0"
+                else:
+                    if self._dev_type == 5:
+                        self._effect = str(stat[3] * 256 + stat[4] - 99)
+                    else:
+#                        self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
+                        self._effect = "0"
+            else:
+                self._hs = None
+                self._ison = False
+                self._effect = None
+                self._brightness = None
         eff_list = []
         if self._dev_type == 5:
             for i in range(301):
@@ -237,8 +241,7 @@ class MagicHomeLight(LightEntity):
                 if self._dev_type == 5:
                     self._effect = str(stat[3] * 256 + stat[4] - 99)
                 else:
-#                    self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
-                    self._effect = "0"
+                    self._effect = list(PATTERN_DICT.keys())[list(PATTERN_DICT.values()).index(stat[4])]
 
     def check_recv(self,head,type):
         """check recv_packet from the device."""
