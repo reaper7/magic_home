@@ -3,8 +3,8 @@
 magichome custom component for Home Assistant based on：[magichome-python](https://github.com/adamkempenich/magichome-python)
 
 ## Installation
-Copy magic_home folder with all files inside to the custom_components directory in your home assistant installation dir.
-Add the following entry to your configuration.yaml
+Copy magic_home folder with all files inside to the custom_components directory in your home assistant installation dir
+and add the following entry to your configuration.yaml
 ```yml
 light:
   - platform: magic_home
