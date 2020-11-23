@@ -232,7 +232,6 @@ class MagicHomeLight(LightEntity):
                 rgb = (self._state[6],self._state[7],self._state[8])
                 max_color = max(rgb)
                 self._brightness = max_color
-                self._brightness = max_color
                 hs_rgb = rgb
                 if max_color != 0:
                     hs_rgb = (rgb[0] * 255 / max_color,rgb[1] * 255 / max_color,rgb[2] * 255 / max_color)
